@@ -1,6 +1,6 @@
 const app = require('./server');
 
 
-app.listen(app.get("port"),()=>{
-console.log("Server Listen on Port", app.get("port"), "http://localhost:4000/");
+app.listen(app.get("PORT"),()=>{
+console.log("Server Listen on Port", app.get("PORT"),   `http://localhost:${app.get("PORT")}/`);
 });

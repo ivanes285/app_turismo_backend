@@ -7,3 +7,5 @@ router.route('/places').get(getPlaces).post(createPlace)
 
 
 router.route('/places/:id').delete(deletePlace).put(updatePlace)
+
+module.exports = router
