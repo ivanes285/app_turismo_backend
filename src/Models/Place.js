@@ -21,7 +21,6 @@ const PlaceSchema = new Schema(
     },
     images: {
       type: Array,
-      required: true,
       default: [],
     },
    

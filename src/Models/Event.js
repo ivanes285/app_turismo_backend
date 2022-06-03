@@ -13,7 +13,6 @@ const EventSchema = new Schema(
     },
     images: {
       type: Array,
-      required: true,
       default: [],
     },
     dateEvent:{

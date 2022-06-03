@@ -8,7 +8,7 @@ const cookieParser= require('cookie-parser');
 
 
 //SETTINGS
-app.set("PORT", process.env.PORT || 5000)
+app.set("PORT", process.env.PORT || 4000)
 
 
 //MIDLEWARES

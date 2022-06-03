@@ -78,12 +78,11 @@ getEvents: async (req,res) => {
 createEvent: async (req, res) => {
 
     try {
-        const {title,description,category,images,dateEvent,hour} = req.body;
+        const {title,description,images,dateEvent,hour} = req.body;
 
         const newEvent = new Event({ 
             title: title.toLowerCase(), 
             description, 
-            category,
             images, 
             dateEvent,
             hour
