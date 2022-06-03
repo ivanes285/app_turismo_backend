@@ -78,16 +78,15 @@ getEvents: async (req,res) => {
 createEvent: async (req, res) => {
 
     try {
-        const {title,description,parroquia,category,images,location,contact} = req.body;
+        const {title,description,category,images,dateEvent,hour} = req.body;
 
         const newEvent = new Event({ 
             title: title.toLowerCase(), 
             description, 
-            parroquia, 
             category,
             images, 
-            location,
-            contact
+            dateEvent,
+            hour
         })
         await newEvent.save()
         res.json({message: 'Evento Creado !!'})
@@ -100,8 +99,8 @@ createEvent: async (req, res) => {
 updateEvent: async (req, res) => {
     try {
         const id = req.params.id;
-        const { title,description,parroquia,category,images,location,contact } = req.body;
-        await Event.findByIdAndUpdate(id, { $set:{ title,description,parroquia,category,images,location,contact}},{ new: true })
+        const {title,description,category,images,dateEvent,hour } = req.body;
+        await Event.findByIdAndUpdate(id, { $set:{ title,description,category,images,dateEvent,hour}},{ new: true })
         res.json({ message: "Evento Actualizado"})
     } catch (error) {
       return res.status(500).json({ message: error.message });
