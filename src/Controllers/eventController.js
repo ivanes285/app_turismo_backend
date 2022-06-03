@@ -18,7 +18,7 @@ class APIfeatures {
        
        let queryStr = JSON.stringify(queryObj)
   
-       queryStr = queryStr.reEvent(/\b(gte|gt|lt|lte|regex)\b/g, match => '$' + match)
+       queryStr = queryStr.replace(/\b(gte|gt|lt|lte|regex)\b/g, match => '$' + match)
     
     //    gte = greater than or equal
     //    lte = lesser than or equal
@@ -60,7 +60,6 @@ getEvents: async (req,res) => {
     try {
         const features = new APIfeatures(Event.find(), req.query)
         .filtering().sorting().paginating()
-
         const events = await features.query
 
         res.json({
@@ -70,7 +69,8 @@ getEvents: async (req,res) => {
         })
         
     } catch (error) {
-        return res.status(500).json({message: error.message})
+        console.log('error.message',error.message);
+        // return res.status(500).json({message: error.message})
     }
 
 },
@@ -78,13 +78,14 @@ getEvents: async (req,res) => {
 createEvent: async (req, res) => {
 
     try {
-        const {title,description,images,dateEvent,hour} = req.body;
+        const {title,description,images,lugar,dateEvent,hour} = req.body;
 
         const newEvent = new Event({ 
             title: title.toLowerCase(), 
             description, 
             images, 
-            dateEvent,
+            lugar,
+            dateEvent:dateEvent.toString(),
             hour
         })
         await newEvent.save()
@@ -98,8 +99,8 @@ createEvent: async (req, res) => {
 updateEvent: async (req, res) => {
     try {
         const id = req.params.id;
-        const {title,description,category,images,dateEvent,hour } = req.body;
-        await Event.findByIdAndUpdate(id, { $set:{ title,description,category,images,dateEvent,hour}},{ new: true })
+        const {title,description,images,lugar,dateEvent,hour } = req.body;
+        await Event.findByIdAndUpdate(id, { $set:{ title,description,images,lugar,dateEvent,hour}},{ new: true })
         res.json({ message: "Evento Actualizado"})
     } catch (error) {
       return res.status(500).json({ message: error.message });
