@@ -13,6 +13,7 @@ const EventSchema = new Schema(
     },
     images: {
       type: Array,
+      required: true,
       default: [],
     },
     dateEvent:{
@@ -23,6 +24,10 @@ const EventSchema = new Schema(
     hour:{
       type: String,
       required: true
+    },
+    checked: {
+      type: Boolean,
+      default: false,
     }
   },
   {

@@ -21,6 +21,7 @@ const PlaceSchema = new Schema(
     },
     images: {
       type: Array,
+      required: true,
       default: [],
     },
    
@@ -34,6 +35,10 @@ const PlaceSchema = new Schema(
     contact:{
         type: String,
         default: 'N/R',
+    },
+    checked: {
+      type: Boolean,
+      default: false,
     }
   },
   {
