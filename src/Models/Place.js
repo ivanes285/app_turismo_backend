@@ -35,6 +35,9 @@ const PlaceSchema = new Schema(
         type: String,
         default: 'N/R',
     },
+    putuacion:{
+      type: Number
+    },
     checked: {
       type: Boolean,
       default: false,

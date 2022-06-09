@@ -60,7 +60,7 @@ const userController = {
         httpOnly: true,
         path: "/user/refresh_token", //configuraciones adicionales (seguridad)
       });
-      return res.json({ accessToken });
+     res.json({ accessToken });
       // return res.status(200).json({ message: "Login Success!" });
     } catch (error) {
       return res.status(500).json({ message: error.message });
