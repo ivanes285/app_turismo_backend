@@ -9,7 +9,7 @@ router.post('/login',login)
 router.get('/logout',logout)
 router.get('/refresh_token',refreshToken)
 router.get('/info',auth,getUser)
-router.get('/users',auth,authAdmin,getUsers)
+router.get('/users',getUsers)
 
 
 
