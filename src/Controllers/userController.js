@@ -7,6 +7,7 @@ const userController = {
   register: async (req, res) => {
     try {
       const { name, email, password } = req.body;
+      
       const search = await User.findOne({ email });
       if (search)
         return res.status(400).json({ message: "Ya existe un usuario registrado con este correo !!" });
@@ -110,7 +111,7 @@ const userController = {
 
   getUsers: async (req, res) => {
     try {
-      const users = await User.find().select("-password");
+      const users = await User.find();
       if (!users)
         return res.status(400).json({ message: "No hay usuarios registrados" });
       res.json({ users });
@@ -119,7 +120,33 @@ const userController = {
     }
   },
 
+
+  updateUser: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const {name,email, password}= req.body
+       await User.findByIdAndUpdate(id, {name,email,password})
+      res.status(200).json({message: "El usuario ha sido actualizado" })
+    
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  deleteUser: async (req, res) => {
+    try {
+      const id = req.params.id;
+       await User.findByIdAndDelete(id)
+      res.status(200).json({message: "El usuario ha sido eliminado"})
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+
 };
+
+
+
 
 const createAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1d" });
