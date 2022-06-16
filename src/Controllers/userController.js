@@ -115,7 +115,7 @@ const userController = {
       const id = req.params.id;
       const { name, email, password } = req.body;
       const newPassword = undefined;
-      console.log(typeof newPassword);
+      // console.log(typeof newPassword);
       if (password) newPassword = bcrypt.hashSync(password, 12);
       await User.findByIdAndUpdate(id, { name, email, password: newPassword })
       console.log( name, email, password);

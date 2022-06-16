@@ -11,9 +11,9 @@ const PlaceSchema = new Schema(
       type: String,
       required: true,
     },
-    parroquia:{
-        type: String,
-        required: true,
+    parroquia: {
+      type: String,
+      required: true,
     },
     category: {
       type: String,
@@ -23,25 +23,33 @@ const PlaceSchema = new Schema(
       type: Array,
       default: [],
     },
-   
-    location: {
-      lat: { type: String, 
-        default: "0.04777" },
-      lng: { type: String,
-         default: "-78.22168" },
+    public_id: {
+      type: Array,
+      default: [],
     },
 
-    contact:{
-        type: String,
-        default: 'N/R',
+    lat: { type: String,
+      default: "0.04777"
+     },
+
+    lng: { type: String,
+      default: "-78.22168"
+     },
+    zoom: { type: String,
+       default: "12"
+       },
+
+    contact: {
+      type: String,
+      default: "N/R",
     },
-    putuacion:{
-      type: Number
+    putuacion: {
+      type: Number,
     },
     checked: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   {
     timestamps: true,

@@ -1,4 +1,6 @@
 const Place = require('../Models/Place')
+const cloudinary = require("cloudinary");
+const fs = require("fs-extra"); 
 
 
 class APIfeatures {
@@ -75,43 +77,95 @@ getPlaces: async (req,res) => {
 
 },
 
-createPlace: async (req, res) => {
+createPlace: async  (req, res)=> {
 
     try {
-        const {title,description,parroquia,category,images,location,contact} = req.body;
+        const { title, description, parroquia, category,zoom,lat,lng, contact } = req.body;
+        // const position= JSON.parse(location)
+        const archivos = req.files;
+         const public_ids = [];
+         const urls = [];
 
-        const newPlace = new Place({ 
-            title: title.toLowerCase(), 
-            description, 
-            parroquia, 
+        for (let i = 0; i < archivos.length; i++) {
+            const localFilePath = req.files[i].path;
+            const result = await cloudinary.v2.uploader.upload(localFilePath); // con esta linea ya estoy subiendo las imagenes al servidor de cloudinary
+            //recuerda que result devulve url y secure_url que es la misma ruta de la imagen pero con protocolo https 
+            urls.push(result.secure_url);
+            public_ids.push(result.public_id);
+        }
+        const newPlace = new Place({
+            title: title.toLowerCase(),
+            description,
+            parroquia,
             category,
-            images, 
-            location,
+            zoom,
+            lat,
+            lng,
+            images: urls,
+            public_id: public_ids,
             contact
-        })
-        await newPlace.save()
-        res.json({message: 'Lugar Creado !!'})
-  
-      } catch (error) {
-        return res.status(500).json({ message: error.message });
-      }
+        });
+        await newPlace.save();
+        for (let a = 0; a < urls.length; a++) {
+            fs.unlink(req.files[a].path); // con esto eliminamos la imagen de la app (uploads) y solo la tendremos en el server de cloudinary
+        }
+        res.json({ message: 'Lugar Creado !!' });
+
+    } catch (error) {
+        // return res.status(500).json({ message: error.message });
+        console.log("error",error)
+    }
 },
 
 updatePlace: async (req, res) => {
     try {
         const id = req.params.id;
-        const { title,description,parroquia,category,images,location,contact } = req.body;
-        await Place.findByIdAndUpdate(id, { $set:{ title,description,parroquia,category,images,location,contact}},{ new: true })
+
+        const archivos = req.files;
+        const public_ids = [];
+        const urls = [];
+
+        if(archivos){
+
+          const ids= await Place.findById(id,{public_id:1,_id:0})
+          const cod= ids["public_id"]
+          for (let i=0; i<cod.length; i++){
+           await cloudinary.v2.uploader.destroy(cod[i]); //la eliminamos de cloudinary tambien
+          }
+
+          for (let i = 0; i < archivos.length; i++) {
+            const localFilePath = req.files[i].path;
+            const result = await cloudinary.v2.uploader.upload(localFilePath); // con esta linea ya estoy subiendo las imagenes al servidor de cloudinary
+            //recuerda que result devulve url y secure_url que es la misma ruta de la imagen pero con protocolo https 
+            urls.push(result.secure_url);
+            public_ids.push(result.public_id);
+        }
+
+        }
+      
+        const { title,description,parroquia,category,zoom,lat,lng,contact } = req.body;
+        // console.log('req.body',req.body)
+        await Place.findByIdAndUpdate(id, { $set:{ title,description,parroquia,category,zoom,lat,lng,images:urls.length===0?undefined:urls, public_id: public_ids.length===0 ?undefined : public_ids ,contact}},{ new: true })
         res.json({ message: "Lugar Actualizado"})
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      console.log(error)
+      // return res.status(500).json({ message: error.message });
     }
   },
-  
+
+
+
+
+
 deletePlace: async (req, res) => {
     try {
         const id = req.params.id;
+        const ids= await Place.findById(id,{public_id:1,_id:0})
         await Place.findByIdAndDelete(id);
+        const cod= ids["public_id"]
+        for (let i=0; i<cod.length; i++){
+         await cloudinary.v2.uploader.destroy(cod[i]); //la eliminamos de cloudinary tambien
+        }
         res.status(200).json({ message: "Lugar Eliminado"})
     } catch (error) {
       return res.status(500).json({ message: error.message });

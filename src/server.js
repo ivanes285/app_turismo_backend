@@ -5,18 +5,29 @@ const cors = require('cors');
 const morgan = require('morgan');
 const fs= require('fs-extra');
 const cookieParser= require('cookie-parser');
+const path= require('path');
 
 
 //SETTINGS
 app.set("PORT", process.env.PORT || 4000)
 
 
+
 //MIDLEWARES
 app.use(morgan('dev'));
 app.use(express.json())
-app.use(cors());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended:false }))
+app.use('/images',express.static(path.join(__dirname, "/images")))  //Hcemos publica la carpeta imagenes
+
+const corsOptions = {
+    origin: '*',   //Reemplazar con el dominio
+    optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions));
+
+
 
 
 

@@ -15,6 +15,10 @@ const EventSchema = new Schema(
       type: Array,
       default: [],
     },
+    public_id: {
+      type: Array,
+      default: [],
+    },
     lugar:{
       type: String,
       required: true,
