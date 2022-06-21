@@ -113,7 +113,7 @@ createEvent: async (req, res) => {
             images:urls, 
             public_id: public_ids,
             lugar,
-            dateEvent:dateEvent.toString(),
+            dateEvent,
             hour
         })
         await newEvent.save()

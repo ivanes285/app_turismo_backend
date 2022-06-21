@@ -2,7 +2,6 @@ const router = require('express').Router()
 const {getPlaces,createPlace,updatePlace,deletePlace} = require('../Controllers/placeController')
 const cloudinary = require("cloudinary");
 const multer = require("multer");
-const fs = require("fs-extra"); 
 const path= require("path");
 
 //Configuracion Cloudinary

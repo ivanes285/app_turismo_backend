@@ -108,6 +108,7 @@ createPlace: async  (req, res)=> {
         await newPlace.save();
         for (let a = 0; a < urls.length; a++) {
             fs.unlink(req.files[a].path); // con esto eliminamos la imagen de la app (uploads) y solo la tendremos en el server de cloudinary
+           
         }
         res.json({ message: 'Lugar Creado !!' });
 
