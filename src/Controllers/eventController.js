@@ -1,5 +1,6 @@
 const Event = require('../Models/Event')
-
+const cloudinary = require("cloudinary");
+const fs = require("fs-extra"); 
 
 class APIfeatures {
     constructor(query, queryString){
@@ -93,17 +94,32 @@ getLugares: async (req,res) => {
 createEvent: async (req, res) => {
 
     try {
-        const {title,description,images,lugar,dateEvent,hour} = req.body;
+        const {title,description,lugar,dateEvent,hour} = req.body;
+        const archivos = req.files;
+        const public_ids = [];
+        const urls = [];
+
+       for (let i = 0; i < archivos.length; i++) {
+           const localFilePath = req.files[i].path;
+           const result = await cloudinary.v2.uploader.upload(localFilePath); // con esta linea ya estoy subiendo las imagenes al servidor de cloudinary
+           //recuerda que result devulve url y secure_url que es la misma ruta de la imagen pero con protocolo https 
+           urls.push(result.secure_url);
+           public_ids.push(result.public_id);
+       }
 
         const newEvent = new Event({ 
             title: title.toLowerCase(), 
             description, 
-            images, 
+            images:urls, 
+            public_id: public_ids,
             lugar,
             dateEvent:dateEvent.toString(),
             hour
         })
         await newEvent.save()
+        for (let a = 0; a < urls.length; a++) {
+            fs.unlink(req.files[a].path); // con esto eliminamos la imagen de la app (uploads) y solo la tendremos en el server de cloudinary
+        }
         res.json({message: 'Evento Creado !!'})
   
       } catch (error) {
@@ -114,18 +130,50 @@ createEvent: async (req, res) => {
 updateEvent: async (req, res) => {
     try {
         const id = req.params.id;
-        const {title,description,images,lugar,dateEvent,hour } = req.body;
-        await Event.findByIdAndUpdate(id, { $set:{ title,description,images,lugar,dateEvent,hour}},{ new: true })
+        const archivos = req.files;
+        const public_ids = [];
+        const urls = [];
+        if(archivos){
+
+            const ids= await Event.findById(id,{public_id:1,_id:0})
+            const cod= ids["public_id"]
+            for (let i=0; i<cod.length; i++){
+             await cloudinary.v2.uploader.destroy(cod[i]); //la eliminamos de cloudinary tambien
+            }
+  
+            for (let i = 0; i < archivos.length; i++) {
+              const localFilePath = req.files[i].path;
+              const result = await cloudinary.v2.uploader.upload(localFilePath); // con esta linea ya estoy subiendo las imagenes al servidor de cloudinary
+              //recuerda que result devulve url y secure_url que es la misma ruta de la imagen pero con protocolo https 
+              urls.push(result.secure_url);
+              public_ids.push(result.public_id);
+          }
+  
+          }
+        const {title,description,lugar,dateEvent,hour } = req.body;
+        await Event.findByIdAndUpdate(id, { $set:{ title,description,images:urls.length===0?undefined:urls,public_id: public_ids.length===0 ?undefined : public_ids,lugar,dateEvent,hour}},{ new: true })
         res.json({ message: "Evento Actualizado"})
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
   },
   
+
+
+
+
+
+
+
 deleteEvent: async (req, res) => {
     try {
         const id = req.params.id;
+        const ids= await Event.findById(id,{public_id:1,_id:0})
         await Event.findByIdAndDelete(id);
+        const cod= ids["public_id"]
+        for (let i=0; i<cod.length; i++){
+         await cloudinary.v2.uploader.destroy(cod[i]); //la eliminamos de cloudinary tambien
+        }
         res.status(200).json({ message: "Evento Eliminado"})
     } catch (error) {
       return res.status(500).json({ message: error.message });

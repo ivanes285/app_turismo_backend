@@ -148,8 +148,8 @@ updatePlace: async (req, res) => {
         await Place.findByIdAndUpdate(id, { $set:{ title,description,parroquia,category,zoom,lat,lng,images:urls.length===0?undefined:urls, public_id: public_ids.length===0 ?undefined : public_ids ,contact}},{ new: true })
         res.json({ message: "Lugar Actualizado"})
     } catch (error) {
-      console.log(error)
-      // return res.status(500).json({ message: error.message });
+      
+      return res.status(500).json({ message: error.message });
     }
   },
 
