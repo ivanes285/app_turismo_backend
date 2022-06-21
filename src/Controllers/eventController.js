@@ -160,11 +160,6 @@ updateEvent: async (req, res) => {
   
 
 
-
-
-
-
-
 deleteEvent: async (req, res) => {
     try {
         const id = req.params.id;
