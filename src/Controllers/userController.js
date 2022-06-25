@@ -129,7 +129,7 @@ const userController = {
     try {
       const id = req.params.id;
       await User.findByIdAndDelete(id);
-      res.status(200).json({ message: "El usuario ha sido eliminado" });
+      res.status(200).json({ message: "El usuario ha sido eliminado correctamente" });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }

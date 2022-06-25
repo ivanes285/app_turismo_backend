@@ -41,7 +41,7 @@ const PlaceSchema = new Schema(
 
     contact: {
       type: String,
-      default: "N/R",
+      default: "3836560",
     },
     putuacion: {
       type: Number,
