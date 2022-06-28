@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const cors = require('cors');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 const fs= require('fs-extra');
 const cookieParser= require('cookie-parser');
 const path= require('path');
@@ -14,7 +14,7 @@ app.set("PORT", process.env.PORT || 4000)
 
 
 //MIDLEWARES
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 app.use(express.json())
 app.use(cookieParser());
 app.use(express.urlencoded({ extended:false }))
