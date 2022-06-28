@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {register,refreshToken,login,logout,getUser,getUsers,updateUser,deleteUser}= require('../Controllers/userController')
-const auth = require('../middlewares/auth')
-const authAdmin= require('../middlewares/authAdmin')
+const auth = require('../Middlewares/auth')
+const authAdmin= require('../Middlewares/authAdmin')
 
 
 router.post('/register',auth,authAdmin,register)
