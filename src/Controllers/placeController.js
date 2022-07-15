@@ -146,11 +146,16 @@ updatePlace: async (req, res) => {
       
         const { title,description,parroquia,category,zoom,lat,lng,contact } = req.body;
         // console.log('req.body',req.body)
-        await Place.findByIdAndUpdate(id, { $set:{ title,description,parroquia,category,zoom,lat,lng,images:urls.length===0?undefined:urls, public_id: public_ids.length===0 ?undefined : public_ids ,contact}},{ new: true })
+        await Place.findByIdAndUpdate(id, { $set:{ title:title.toLowerCase(),description,parroquia,
+            category,zoom,lat,lng,images:urls.length===0?undefined:urls, public_id: public_ids.length===0 ?undefined : public_ids ,contact}},{ new: true })
+            for (let a = 0; a < urls.length; a++) {
+                fs.unlink(req.files[a].path); // con esto eliminamos la imagen de la app (uploads) y solo la tendremos en el server de cloudinary
+               
+            }
         res.json({ message: "Lugar Actualizado"})
     } catch (error) {
-      
-      return res.status(500).json({ message: error.message });
+      console.log("error",error)
+    //   return res.status(500).json({ message: error.message });
     }
   },
 

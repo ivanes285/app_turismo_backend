@@ -81,10 +81,7 @@ getLugares: async (req,res) => {
     try {
         const lugares= await Event.distinct('lugar')
             // console.log("lugares",places);
-        
          res.json({lugares});
-        
-
        
     } catch (error) {
          return res.status(500).json({message: error.message})
@@ -151,7 +148,7 @@ updateEvent: async (req, res) => {
   
           }
         const {title,description,lugar,dateEvent,hour } = req.body;
-        await Event.findByIdAndUpdate(id, { $set:{ title,description,images:urls.length===0?undefined:urls,public_id: public_ids.length===0 ?undefined : public_ids,lugar,dateEvent,hour}},{ new: true })
+        await Event.findByIdAndUpdate(id, { $set:{ title: title.toLowerCase(),description,images:urls.length===0?undefined:urls,public_id: public_ids.length===0 ?undefined : public_ids,lugar,dateEvent,hour}},{ new: true })
         res.json({ message: "Evento Actualizado"})
     } catch (error) {
       return res.status(500).json({ message: error.message });
