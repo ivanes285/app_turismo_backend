@@ -28,8 +28,6 @@ app.use(cors(corsOptions));
 
 
 
-
-
 //Database
 require('./database');
 
@@ -42,6 +40,14 @@ app.use('/api',require('./Routes/place.routes'))
 app.use('/api',require('./Routes/event.routes'))
 
 
+
+const build = path.resolve(__dirname, '../build');
+app.use(express.static(build));
+
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../build/index.html'));
+});
 
 
 
